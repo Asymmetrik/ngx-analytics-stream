@@ -5,7 +5,11 @@
   "description": "Sets up an analytics stream handler for client applications",
   "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
   "license": "MIT",
-  "dependencies": {
-    "gulp": "^3.9.1"
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-util": "^3.0.8"
   }
 }

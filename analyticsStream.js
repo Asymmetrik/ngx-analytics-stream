@@ -1,8 +1,7 @@
-/**
- * global window
- */
+/* eslint-env browser */
+
 (function(global) {
-	"use strict";
+	'use strict';
 
 	/**
 	 * @type {{url: string, sessionCookie: string, product: string}}
@@ -29,8 +28,8 @@
 
 		// Now push a page load analytics event
 		push({
-			eventLabel: "onload",
-			eventCategory: "page load",
+			eventLabel: 'onload',
+			eventCategory: 'page load',
 			eventValue: {
 				'page.loadTime': loadTime
 			}
@@ -81,7 +80,7 @@
 	 */
 	function push(payload) {
 		if (!payload.product) {
-			payload.product = product;
+			payload.product = conf.product;
 		}
 		if (!payload.sessionId) {
 			payload.sessionId = getSessionId();
@@ -96,6 +95,17 @@
 			global.datalayer.push(payload);
 		}
 
+		// Dispatch an event to the global object to allow other plugins to interact with the data.
+		// TODO Create a shim for this that also works in IE
+		if (global.dispatchEvent && global.CustomEvent) {
+			const event = new global.CustomEvent('push.analyticsStream', {
+				detail: payload,
+				cancelable: false,
+				bubbles: false
+			});
+			global.dispatchEvent(event);
+		}
+
 		// TODO Do this in batches
 		send(payload);
 	}
@@ -104,8 +114,8 @@
 		if (conf.url) {
 			// Create an unadorned AJAX request. There's no need to wait for a response.
 			let req = new XMLHttpRequest();
-			req.addEventListener("error", function(err) { console.log(err); });
-			req.open("GET", conf.url);
+			req.addEventListener('error', function(err) { console.log(err); });
+			req.open('GET', conf.url);
 			req.send();
 		}
 	}
