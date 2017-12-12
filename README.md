@@ -1,9 +1,12 @@
-# Angular2 Analytics Stream
+# AngularX Analytics Stream
 
-This package adds the ability to stream various page events to a backend service for collecting analytics streams.
+This package adds the ability to stream various page events to a backend service
+for collecting analytics streams.
 
 ## Project structure
-This plugin consists of two parts:
+This plugin consists of two parts, an auxilliary tracking script that creates a
+global tracker object, and an Angular wrapper that uses the tracker to capture
+Angular lifecycle events.
 
 ### Auxilliary tracking script
 This script functions similarly to the Google Analytics tracking
