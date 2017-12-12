@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-(function(global) {
+(function(window, document) {
 	'use strict';
 
 	/**
@@ -9,7 +9,7 @@
 	const conf = {
 		url: null,
 		sessionCookie: null,
-		product: null
+		product: ''
 	};
 
 	/**
@@ -18,10 +18,29 @@
 	 */
 	const startTime = new Date();
 
-	global.onload = () => {
+	/**
+	 * Track the user's session ID from a cookie
+	 * @type {string|null}
+	 */
+	let sessionId = null;
+
+	window.onload = () => {
 
 		// If there are already onload events, trigger them first
-		if (global.onload) global.onload();
+		if (window.onload) window.onload();
+
+		// Get the session ID cookie
+		if (!sessionId && obj.sessionCookie && document.cookie) {
+			sessionId = document.cookie.split('; ')
+				.map(cookie => cookie.split('='))
+				.filter(cookiepair => cookiepair[0] === obj.sessionCookie);
+
+		}
+		// If there isn't a session ID cookie yet, create one
+		if (!sessionId && obj.sessionCookie && document.cookie && window.btoa && Math.random) {
+			sessionId = window.btoa(conf.product + Math.random());
+			document.cookie = obj.sessionCookie + '=' + sessionId;
+		}
 
 		// Calculate the page load time
 		let loadTime = new Date().getMilliseconds() - startTime.getMilliseconds();
@@ -61,10 +80,6 @@
 		return conf;
 	}
 
-	function getSessionId() {
-		// TODO Implement this
-	}
-
 	/**
 	 * Pushes a payload to the analytics endpoint.
 	 *
@@ -83,27 +98,27 @@
 			payload.product = conf.product;
 		}
 		if (!payload.sessionId) {
-			payload.sessionId = getSessionId();
+			payload.sessionId = sessionId;
 		}
 		if (!payload.timestamp) {
 			payload.timestamp = new Date().getMilliseconds();
 		}
 
 		// If there is a Google Analytics datalayer and this payload is not classified, push it there too
-		if (global.datalayer && !payload.classification) {
+		if (window.datalayer && !payload.classification) {
 			// TODO Format the payload appropriately
-			global.datalayer.push(payload);
+			window.datalayer.push(payload);
 		}
 
-		// Dispatch an event to the global object to allow other plugins to interact with the data.
+		// Dispatch an event to the window object to allow other plugins to interact with the data.
 		// TODO Create a shim for this that also works in IE
-		if (global.dispatchEvent && global.CustomEvent) {
-			const event = new global.CustomEvent('push.analyticsStream', {
+		if (window.dispatchEvent && window.CustomEvent) {
+			const event = new window.CustomEvent('push.analyticsStream', {
 				detail: payload,
 				cancelable: false,
 				bubbles: false
 			});
-			global.dispatchEvent(event);
+			window.dispatchEvent(event);
 		}
 
 		// TODO Do this in batches
@@ -146,7 +161,7 @@
 				eventValue: values
 			});
 			return true;
-		}
+		};
 	}
 
 	/**
@@ -154,11 +169,11 @@
 	 *
 	 * @type {{config: config, push: push, pageview: pageview, pageevent: pageevent}}
 	 */
-	global.analyticsStream = {
+	window.analyticsStream = {
 		config: config,
 		push: push,
 		pageview: pageview,
 		pageevent: pageevent
 	};
 
-})(window);
+})(window, document);
