@@ -1,0 +1,11 @@
+{
+  "name": "ngx-analytics-stream",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Sets up an analytics stream handler for client applications",
+  "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  }
+}
