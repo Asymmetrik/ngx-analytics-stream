@@ -129,14 +129,36 @@
 	}
 
 	/**
+	 * Returns a click-tracking function that can be added to any link tag, for convenience.
+	 *
+	 * `<a href="/my-link" onclick="analyticsStream.pagevent("my link", "link", "click")">Link</a>`
+	 *
+	 * @param {string=} label The event label
+	 * @param {string=} category The event category
+	 * @param {Object=} values Any values to transmit with this click event
+	 * @returns {Function}
+	 */
+	function pageevent(label, category, values) {
+		return function(event) {
+			push({
+				eventLabel: label,
+				eventCategory: category,
+				eventValue: values
+			});
+			return true;
+		}
+	}
+
+	/**
 	 * Registers a global object that can send analytics events
 	 *
-	 * @type {{config: config, push: push, pageview: pageview}}
+	 * @type {{config: config, push: push, pageview: pageview, pageevent: pageevent}}
 	 */
 	global.analyticsStream = {
 		config: config,
 		push: push,
-		pageview: pageview
+		pageview: pageview,
+		pageevent: pageevent
 	};
 
 })(window);
