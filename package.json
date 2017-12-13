@@ -1,7 +1,7 @@
 {
   "name": "ngx-analytics-stream",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Sets up an analytics stream handler for client applications",
   "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
   "license": "MIT",
@@ -15,9 +15,11 @@
     "gulp-load-plugins": "^1.5.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-util": "^3.0.8",
-    "node-static": "^0.7.10"
+    "gulp-watch": "^4.3.11",
+    "gulp-webserver": "^0.9.1"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "gulp run",
+    "watch": "gulp watch"
   }
 }

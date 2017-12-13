@@ -21,7 +21,7 @@ gulp.task('eslint', function () {
 });
 
 gulp.task('compile', function() {
-	gulp.src('src/analyticStream.js')
+	return gulp.src('src/analyticStream.js')
 		.pipe(plugins.sourcemaps.init())
 		.pipe(plugins.babel({
 			'presets': [
@@ -41,3 +41,15 @@ gulp.task('build', ['eslint', 'compile']);
 
 gulp.task('default', ['build']);
 
+gulp.task('watch', ['run'], () => {
+	return gulp.watch('src/**', ['build']);
+});
+
+gulp.task('run', () => {
+	return gulp.src('public')
+		.pipe(plugins.webserver({
+			livereload: true,
+			directoryListing: false,
+			port: 8080
+		}));
+});
