@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "description": "Sets up an analytics stream handler for client applications",
   "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
+  "engines": {
+    "node": "^6.9.x",
+    "npm": "^3.x.x"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",

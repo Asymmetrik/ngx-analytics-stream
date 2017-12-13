@@ -1,5 +1,4 @@
 'use strict';
-const fs = require('fs');
 
 /**
  * @file
@@ -14,6 +13,8 @@ const fs = require('fs');
  * @param {http.response} res
  */
 module.exports.expressController = function(req, res) {
+	const fs = require('fs');
+
 	try {
 		res.setHeader('Content-Type', 'application/javascript');
 		const stream = fs.createReadStream('./public/dist/analyticStream.js');
