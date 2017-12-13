@@ -10,6 +10,10 @@
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
     "gulp-load-plugins": "^1.5.0",
-    "gulp-util": "^3.0.8"
+    "gulp-util": "^3.0.8",
+    "node-static": "^0.7.10"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

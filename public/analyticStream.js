@@ -9,7 +9,8 @@
 	const conf = {
 		url: null,
 		sessionCookie: null,
-		product: ''
+		product: '',
+		skipPageView: false
 	};
 
 	/**
@@ -18,32 +19,18 @@
 	 */
 	const startTime = new Date();
 
-	/**
-	 * Track the user's session ID from a cookie
-	 * @type {string|null}
-	 */
-	let sessionId = null;
 
+	const prevOnLoad = window.onload;
 	window.onload = () => {
 
 		// If there are already onload events, trigger them first
-		if (window.onload) window.onload();
+		if (prevOnLoad) prevOnLoad();
 
-		// Get the session ID cookie
-		if (!sessionId && obj.sessionCookie && document.cookie) {
-			sessionId = document.cookie.split('; ')
-				.map(cookie => cookie.split('='))
-				.filter(cookiepair => cookiepair[0] === obj.sessionCookie);
-
-		}
-		// If there isn't a session ID cookie yet, create one
-		if (!sessionId && obj.sessionCookie && document.cookie && window.btoa && Math.random) {
-			sessionId = window.btoa(conf.product + Math.random());
-			document.cookie = obj.sessionCookie + '=' + sessionId;
-		}
+		// Initialize the session ID
+		_getSessionId();
 
 		// Calculate the page load time
-		let loadTime = new Date().getMilliseconds() - startTime.getMilliseconds();
+		let loadTime = new Date().getTime() - startTime.getTime();
 
 		// Now push a page load analytics event
 		push({
@@ -53,7 +40,66 @@
 				'page.loadTime': loadTime
 			}
 		});
+
+		// Now push a page view event, unless we've explicitly asked not to
+		if (!conf.skipPageView) {
+			pageview();
+		}
 	};
+
+	/**
+	 * Track the user's session ID from a cookie
+	 * @type {string|null}
+	 */
+	let sessionId = null;
+	function _getSessionId() {
+		// Get the session ID cookie
+		if (!sessionId && conf.sessionCookie && document.cookie) {
+			sessionId = document.cookie.split('; ')
+				// Split each cookie into key, value
+				.map(cookie => cookie.split('='))
+				// Only get the cookie with the key we're looking for
+				.filter(cookiepair => cookiepair[0] === conf.sessionCookie)
+				// Only return the value, not the key
+				.map(cookiepair => cookiepair[1])
+				.shift();
+
+		}
+		// If there isn't a session ID cookie yet, create one
+		if (!sessionId && conf.sessionCookie && window.btoa && Math.random) {
+			sessionId = window.btoa(conf.product + Math.random());
+			document.cookie = conf.sessionCookie + '=' + encodeURIComponent(sessionId);
+		}
+	}
+
+	/**
+	 * Sets a key/value pair, unless a value is already set for the key.
+	 * This checks both JSONPath-style keys and also nested objects
+	 *
+	 * @param {Object} data - The object in which to set the key
+	 * @param {string} key - The key to check, which could include dots between pieces
+	 * @param {Object} defaultValue - The value to set unless the key already exists
+	 * @returns {Object} The current value of the key
+	 * @private
+	 */
+	function _set(data, key, defaultValue) {
+		if (!data || !key) {
+			return undefined;
+		}
+		let hasKey = key.split('.').reduce((acc, keypart) => {
+			if (!acc[keypart]) {
+				return undefined;
+			}
+			return acc[keypart];
+			}, data);
+
+		if (hasKey !== undefined) {
+			return hasKey;
+		}
+
+		// Since we couldn't find the key, set it to the default value
+		return data[key] = defaultValue;
+	}
 
 	/**
 	 * Configure the analytics stream.  Call this as soon as the script tag has loaded
@@ -63,6 +109,8 @@
 	 *     doesn't exist it will be created.
 	 * @param {string} obj.product - The name of the product or site being tracked, to differentiate from
 	 *     other sites using the same tracking endpoint.
+ *     @param {boolean} obj.skipPageView - If set to true, a pageview event will not immediately be sent
+	 *     once the page loads. If false or omitted, a pageview will be sent.
 	 *
 	 * @returns {{url: string, sessionCookie: string, product: string}} The configuration object
 	 */
@@ -76,6 +124,9 @@
 		}
 		if (obj.product) {
 			conf.product = obj.product;
+		}
+		if (obj.skipPageView) {
+			conf.skipPageView = obj.skipPageView;
 		}
 		return conf;
 	}
@@ -94,15 +145,9 @@
 	 * @param {number=} payload.timestamp - The current timestamp
 	 */
 	function push(payload) {
-		if (!payload.product) {
-			payload.product = conf.product;
-		}
-		if (!payload.sessionId) {
-			payload.sessionId = sessionId;
-		}
-		if (!payload.timestamp) {
-			payload.timestamp = new Date().getMilliseconds();
-		}
+		_set(payload, 'product', conf.product);
+		_set(payload, 'sessionId', sessionId);
+		_set(payload, 'timestamp', new Date().getTime());
 
 		// If there is a Google Analytics datalayer and this payload is not classified, push it there too
 		if (window.datalayer && !payload.classification) {
@@ -113,7 +158,7 @@
 		// Dispatch an event to the window object to allow other plugins to interact with the data.
 		// TODO Create a shim for this that also works in IE
 		if (window.dispatchEvent && window.CustomEvent) {
-			const event = new window.CustomEvent('push.analyticsStream', {
+			const event = new window.CustomEvent('push.analyticStream', {
 				detail: payload,
 				cancelable: false,
 				bubbles: false
@@ -127,26 +172,40 @@
 
 	function send(payload) {
 		if (conf.url) {
+			const str = JSON.stringify(payload);
+
 			// Create an unadorned AJAX request. There's no need to wait for a response.
 			let req = new XMLHttpRequest();
 			req.addEventListener('error', function(err) { console.log(err); });
-			req.open('GET', conf.url);
-			req.send();
+			req.open('POST', conf.url);
+			req.setRequestHeader('Content-type', 'application/json');
+			req.send(str);
 		}
 	}
 
 	/**
 	 * Tracks a pageview and sends all the appropriate properties
-	 * @param path
+	 * @param {Object} properties - Any additional properties to capture
 	 */
 	function pageview(properties) {
-		// TODO Implement this
+		// Automatically pull in the current page URL
+		_set(properties, 'page', {});
+		_set(properties, 'page.host', window.location.host);
+		_set(properties, 'page.pathname', window.location.pathname);
+		_set(properties, 'page.query', window.location.search);
+		_set(properties, 'page.hash', window.location.hash);
+
+		push({
+			eventLabel: 'pageview',
+			eventCategory: 'page load',
+			eventValue: properties
+		});
 	}
 
 	/**
 	 * Returns a click-tracking function that can be added to any link tag, for convenience.
 	 *
-	 * `<a href="/my-link" onclick="analyticsStream.pagevent("my link", "link", "click")">Link</a>`
+	 * `<a href="/my-link" onclick="analyticStream.pagevent("my link", "link", "click")">Link</a>`
 	 *
 	 * @param {string=} label The event label
 	 * @param {string=} category The event category
@@ -169,7 +228,7 @@
 	 *
 	 * @type {{config: config, push: push, pageview: pageview, pageevent: pageevent}}
 	 */
-	window.analyticsStream = {
+	window.analyticStream = {
 		config: config,
 		push: push,
 		pageview: pageview,

@@ -13,7 +13,7 @@ const
  */
 gulp.task('eslint', function () {
 	return gulp.src([
-		'analyticsStream.js'
+		'analyticStream.js'
 	])
 		.pipe(plugins.eslint())
 		.pipe(plugins.eslint.format())
@@ -24,3 +24,4 @@ gulp.task('eslint', function () {
 gulp.task('build', ['eslint']);
 
 gulp.task('default', ['build']);
+

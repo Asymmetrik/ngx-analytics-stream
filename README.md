@@ -18,9 +18,9 @@ The script should be loaded synchronously, and should be followed
 by a configuration block.  For example:
 
 ```html
-<script language="javascript" src="http://path.to/analyticsStream.js"/>
+<script language="javascript" src="http://path.to/analyticStream.js"/>
 <script language="javascript">
-analyticsStream.config({
+analyticStream.config({
 	product: 'my-application',
 	url: 'http://path.to/my/endpoint',
 	sessionCookie: 'sessionId'
@@ -31,7 +31,7 @@ analyticsStream.config({
 Then later down in your script you can track custom analytics by pushing
 them into the stream:
 ```javascript
-analyticsStream.push({
+analyticStream.push({
 	eventLabel: 'next button',
 	eventCategory: 'click'
 });
@@ -40,12 +40,12 @@ analyticsStream.push({
 The analytics package will automatically log page load time.  If you want to log
 a page view event, call:
 ```javascript
-analyticsStream.pageview();
+analyticStream.pageview();
 ```
 
 You can also create convenient onclick wrappers for links or other page events:
 ```html
-<a href="/my-page" onclick="return analyticsStream.pageevent('my link', 'link', 'click')">Link text</a>
+<a href="/my-page" onclick="return analyticStream.pageevent('my link', 'link', 'click')">Link text</a>
 ```
 
 ### Angular2 Wrapper Components
@@ -62,7 +62,7 @@ values, or by using JSONPath-style keys that use dot notation.  For example, the
 the same state at two points in time.
 
 ```javascript
-analyticsStream.push({
+analyticStream.push({
 	'eventLabel': 'pageview',
 	'eventCategory': 'pageview',
 	'eventValue': {
@@ -78,7 +78,7 @@ analyticsStream.push({
 });
 ```
 ```javascript
-analyticsStream.push({
+analyticStream.push({
 	'eventLabel': 'pageview',
 	'eventCategory': 'pageview',
 	'eventValue': {

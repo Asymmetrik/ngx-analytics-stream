@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Analytics Test</title>
+	<script src="analyticStream.js" type="application/javascript"></script>
+	<script type="application/javascript">
+		analyticStream.config({
+			'url': 'http://www.testurl.com',
+			'product': 'test',
+			'sessionCookie': 'sessionId'
+		});
+	</script>
+</head>
+<body>
+<h1>Analytics Stream test page</h1>
+<p>
+	<a target="_blank" href="https://github.com/Asymmetrik/ngx-analytics-stream">See full documentation on GitHub.</a>
+</p>
+<p>The following events have been captured:</p>
+<ul>
+<script type="javascript">
+	window.addEventListener('push.analyticStream', function(event) {
+		document.write('<li>' + event.detail.label + ', ' + event.detail.category + '</li>';
+	});
+</script>
+</ul>
+</body>
+</html>
