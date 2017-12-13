@@ -3,7 +3,8 @@ const path = require('path');
 
 /**
  * @file
- * This file provides an ExpressJS controller that returns the analyticStream.js file, which you can inject into your application.
+ * This file provides an ExpressJS controller that returns the analyticStream.js file,
+ * which you can inject into your application.
  */
 
 /**
@@ -15,7 +16,7 @@ const path = require('path');
 module.exports.expressController = function(req, res) {
 	try {
 		res.setHeader('Content-Type', 'application/javascript');
-		const stream = fs.createReadStream(path.resolve('./public/dist/analyticStream.js'));
+		const stream = fs.createReadStream('./public/dist/analyticStream.js');
 		stream.pipe(res);
 	}
 	catch (err) {
