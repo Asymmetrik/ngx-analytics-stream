@@ -92,8 +92,9 @@
 		if (!data || !key) {
 			return undefined;
 		}
+		// Split the key by dots and iterate into the object to see if the key path exists
 		var hasKey = key.split('.').reduce(function (acc, keypart) {
-			if (!acc[keypart]) {
+			if (!acc || !(keypart in acc)) {
 				return undefined;
 			}
 			return acc[keypart];

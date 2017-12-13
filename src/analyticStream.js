@@ -86,8 +86,9 @@
 		if (!data || !key) {
 			return undefined;
 		}
+		// Split the key by dots and iterate into the object to see if the key path exists
 		let hasKey = key.split('.').reduce((acc, keypart) => {
-			if (!acc[keypart]) {
+			if (!acc || !(keypart in acc)) {
 				return undefined;
 			}
 			return acc[keypart];
