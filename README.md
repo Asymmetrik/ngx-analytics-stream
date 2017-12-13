@@ -95,3 +95,18 @@ Each event has a label, which represents the specific event, and a category, whi
 together classes of similar events.  In addition, each event can include any number of key/value pairs that represent
 any changes that occurred to the state as a result of the event.  For example, an event that represents a user
 changing the value in a selection box would send the new value of the box
+
+## Configuration Options
+
+`analyticStream.config()`
+* `url` - The URL of the analytics server.  Note that this is a CORS cross-origin AJAX request, so the server
+must respond appropriately to `OPTION` requests from this site. 
+* `sessionCookie` - The name of the cookie in which to store the user's session.
+If the cookie doesn't already exist it will be created
+* `product` - The name of this site, to differentiate from other sites that also track to the same backend.
+
+`analyticStream.push()`
+* `eventLabel` - A label for the specific event that occurred.
+* `eventCategory` - A grouping label for the type of event that occurred.  For example, all clicks on links might use
+the same category, while using a label that specifically indicates which button was clicked.
+* `eventValue` - A datalayer object containing any state that should be captured with the event.

@@ -6,10 +6,14 @@
   "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.13.1",
     "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
     "gulp-eslint": "^4.0.0",
     "gulp-load-plugins": "^1.5.0",
+    "gulp-sourcemaps": "^2.6.1",
     "gulp-util": "^3.0.8",
     "node-static": "^0.7.10"
   },
