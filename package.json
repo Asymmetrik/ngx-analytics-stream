@@ -1,7 +1,7 @@
 {
   "name": "@asymmetrik/ngx-analytics-stream",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Sets up an analytics stream handler for client applications",
   "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
   "engines": {
