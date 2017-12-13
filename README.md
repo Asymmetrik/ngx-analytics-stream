@@ -1,5 +1,7 @@
 # AngularX Analytics Stream
 
+[![Build Status](https://travis-ci.org/Asymmetrik/ngx-analytics-stream.svg?branch=master)](https://travis-ci.org/Asymmetrik/ngx-analytics-stream)
+
 This package adds the ability to stream various page events to a backend service
 for collecting analytics streams.
 
