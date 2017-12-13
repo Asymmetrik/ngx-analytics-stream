@@ -1,5 +1,5 @@
 {
-  "name": "ngx-analytics-stream",
+  "name": "@asymmetrik/ngx-analytics-stream",
   "private": true,
   "version": "0.1.0",
   "description": "Sets up an analytics stream handler for client applications",
