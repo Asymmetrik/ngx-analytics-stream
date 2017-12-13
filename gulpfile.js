@@ -11,7 +11,7 @@ const
 /*
  * JS linting task
  */
-gulp.task('eslint', function () {
+gulp.task('lint', function () {
 	return gulp.src([
 		'src/**'
 	])
@@ -33,19 +33,20 @@ gulp.task('compile', function() {
 			]
 		}))
 		.pipe(plugins.sourcemaps.write('.'))
-		.pipe(gulp.dest('./public'));
+		.pipe(gulp.dest('./public/dist'));
 });
 
 // Lint project files and minify them into two production files.
-gulp.task('build', ['eslint', 'compile']);
+gulp.task('build', ['compile']);
 
-gulp.task('default', ['build']);
+gulp.task('default', ['lint', 'build']);
 
-gulp.task('watch', ['run'], () => {
+
+gulp.task('watch', ['lint', 'build', 'run'], () => {
 	return gulp.watch('src/**', ['build']);
 });
 
-gulp.task('run', () => {
+gulp.task('run', ['build'], () => {
 	return gulp.src('public')
 		.pipe(plugins.webserver({
 			livereload: true,

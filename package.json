@@ -18,9 +18,13 @@
     "gulp-watch": "^4.3.11",
     "gulp-webserver": "^0.9.1"
   },
+  "dependencies": {
+    "postinstall-build": "^5.0.1"
+  },
   "scripts": {
     "build": "gulp build",
     "start": "gulp run",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "postinstall": "postinstall-build public/dist"
   }
 }
