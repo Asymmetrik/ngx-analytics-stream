@@ -32,8 +32,10 @@ gulp.task('compile', function() {
 				}]
 			]
 		}))
+		.pipe(plugins.babelMinify())
+		.pipe(plugins.concat('analyticStream.js'))
 		.pipe(plugins.sourcemaps.write('.'))
-		.pipe(gulp.dest('./public/dist'));
+		.pipe(gulp.dest('./public/dist/'));
 });
 
 // Lint project files and minify them into two production files.
