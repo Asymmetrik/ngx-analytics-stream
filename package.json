@@ -1,0 +1,36 @@
+{
+  "name": "@asymmetrik/ngx-analytics-stream",
+  "private": true,
+  "version": "0.1.1",
+  "description": "Sets up an analytics stream handler for client applications",
+  "repository": "https://bitbucket.org/asymmetrik/ngx-analytics-stream",
+  "engines": {
+    "node": "^6.9.x",
+    "npm": "^3.x.x"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.13.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-babel-minify": "^0.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11",
+    "gulp-webserver": "^0.9.1"
+  },
+  "dependencies": {
+    "postinstall-build": "^5.0.1"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "start": "gulp run",
+    "watch": "gulp watch",
+    "postinstall": "postinstall-build public/dist"
+  }
+}
